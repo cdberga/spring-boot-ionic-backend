@@ -37,7 +37,13 @@ public class ClienteResource {
 		Cliente obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 	}
-	
+
+	@RequestMapping(value = "/email", method = RequestMethod.GET)
+	public ResponseEntity<Cliente> find(@RequestParam(value = "value") String email) {
+		Cliente obj = service.findByEmail(email);
+		return ResponseEntity.ok().body(obj);
+	}
+
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDto objDto) {
 		Cliente obj = service.fromDto(objDto);
@@ -46,7 +52,7 @@ public class ClienteResource {
 				.path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
-	
+
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<Void> update(@Valid @RequestBody ClienteDto objDto, @PathVariable Integer id) {
 		Cliente obj = service.fromDto(objDto);
@@ -83,9 +89,9 @@ public class ClienteResource {
 		Page<ClienteDto> listDto = list.map(obj -> new ClienteDto(obj));
 		return ResponseEntity.ok().body(listDto);
 	}
-	
-	@RequestMapping(value="/picture", method = RequestMethod.POST)
-	public ResponseEntity<Void> uploadProfilePicture(@RequestParam(name="file") MultipartFile file) {
+
+	@RequestMapping(value = "/picture", method = RequestMethod.POST)
+	public ResponseEntity<Void> uploadProfilePicture(@RequestParam(name = "file") MultipartFile file) {
 		URI uri = service.uploadProfilePicture(file);
 		return ResponseEntity.created(uri).build();
 	}
